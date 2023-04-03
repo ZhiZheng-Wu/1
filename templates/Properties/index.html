@@ -1,0 +1,89 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Property[]|\Cake\Collection\CollectionInterface $properties
+ */
+
+// DataTable JS plugin
+echo $this->Html->css('//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css',['block' => true]);
+echo $this->Html->script('//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js',['block' => true]);
+?>
+<style>
+    input[type='search'], select {
+        width: auto;
+        height:auto;
+    }
+
+    label {
+        font-size: 1em;
+    }
+</style>
+<nav class="top-nav">
+    <div class="top-nav-title">
+
+        <a href="<?= $this->Url->build('/') ?> "><?= $this->Html->image('pogo.png')?></a>
+    </div>
+    <div class="top-nav-links">
+        <a style="color:yellow"><?= $this->Html->link(__('Dashboard'), ['controller' => 'Pages', 'action' => 'Display','home']) ?></a>
+        <a style="color:yellow"><?= $this->Html->link(__('Properties'), ['controller' => 'Properties', 'action' => 'index']) ?></a>
+        <a style="color:yellow"> <?= $this->Html->link(__('Users'), ['controller' => 'Users','action' => 'index']) ?></a>
+        <a href="index-admin.php" class="btn btn-details">Administration</a>
+    </div>
+</nav>
+<div class="properties index content" style="width:82vw;margin-left:8%">
+    <?= $this->Html->link(__('New Property'), ['action' => 'add'], ['class' => 'button float-right']) ?>
+    <h3><?= __('Properties') ?></h3>
+    <div class="table-responsive">
+        <table id="propertiesTable">
+            <thead>
+            <tr>
+                <th><?= h('Street Address') ?></th>
+                <th><?= h('Postcode') ?></th>
+                <th><?= h('Bedroom') ?></th>
+                <th><?= h('Bathroom') ?></th>
+                <th><?= h('Bond') ?></th>
+                <th><?= h('Furnished') ?></th>
+                <th><?= h('Resident Limit') ?></th>
+
+                <!-- <th><?= $this->Paginator->sort('image')?></th> -->
+
+                <th class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <!-- Removed: ID Suburb, State, Description, Room, Stay Type, Maximum Stay, Minimum Stay, Property Type -->
+            </thead>
+            <tbody>
+            <?php foreach ($properties as $property): ?>
+            <tr>
+                <td><?= h($property->address_street) ?></td>
+                <td><?= h($property->address_postcode) ?></td>
+                <td><?= $this->Number->format($property->num_bedroom) ?></td>
+                <td><?= $this->Number->format($property->num_bathroom) ?></td>
+                <td><?php echo '$'. $this->Number->format($property->bond) ?></td>
+                <td><?php
+                        if($property->furnished == '1'){
+                    echo h("Yes");
+                    }else{
+                    echo h("No");                    }
+                    ?></td>
+                <td><?= $this->Number->format($property->resident_limit) ?></td>
+
+                <!-- <td><?= $this->Html->image($property->image) ;  ?></td> -->
+
+
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $property->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $property->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $property->id], ['confirm' => __('Are you sure you want to delete # {0}?', $property->id)]) ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready( function () {
+        $('#propertiesTable').DataTable();
+    } );
+</script>
